@@ -19,9 +19,10 @@
         <h4>version <%= new_version %> of <%= data.data_name %></h4>
         <button class="btn-add-input">append Row</button>
         <form action="/data/add" method="post">
-
           <input hidden name="dataName" value="<%= data.data_name %>" />
           <div class="data-inputs">
+            <input hidden name="method" class="m-1" /><input hidden name="value" /><br>
+            <input name="method" class="m-1" /><input  name="value" /><br>
             <% contents.forEach((content, key) => { %>
             <input
               name="method"
@@ -38,7 +39,6 @@
           <button>Done</button>
           <br />
         </form>
-
       </div>
     </div>
   </body>
@@ -52,7 +52,7 @@
 
   <script>
     $(".btn-add-input").on("click", function () {
-      var template = `<input class="m-1" /><input/><br />`;
+      var template = `<input name="method" class="m-1" /><input  name="value" /><br />`;
       $(".data-inputs").append(template);
       console.log("dd");
     });

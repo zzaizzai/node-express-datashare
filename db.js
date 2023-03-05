@@ -86,11 +86,23 @@ function createOneData(data_name, user_id, callback) {
     var newData = {
         name: data_name,
         user_id_create: user_id,
-        datetime_create: new Date()
     }
 
+    sql_insert = `insert into data set ?;`
+    sqls_insert = mysql.format(sql_insert, newData)
+
+    var newHistory = {
+        parent_data: data_name,
+        version: 0,
+        text: "created",
+        user_id_create: 1
+    }
+
+    sql_history = mysql.format(`insert into history set ?;`, newHistory)
+
+
     connection.query(
-        `insert into data set ?`, newData,
+        sqls_insert + sql_history,
         (error, results) => {
             if (error) throw error;
             callback(results)

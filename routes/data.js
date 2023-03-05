@@ -35,11 +35,18 @@ router.post('/create', function (req, res) {
 
 router.post('/add', (req, res) => {
     // ToDO: add new version data 
-    console.log(req.body.method)
-    console.log(req.body.dataName)
-    var data_name =  req.body.dataName
-    res.redirect('/data/add/' + data_name)
-    
+    var methods = req.body.method
+    var values = req.body.value
+    var data_name = req.body.dataName
+
+    console.log(req.body)
+
+    for (var i = 1; i < methods.length; i++ ) {
+        console.log("method:", methods[i],"values:", values[i])
+    }
+    res.send("good")
+    // res.redirect('/data/add/' + data_name)
+
 })
 
 router.get('/add/:id', function (req, res, next) {
