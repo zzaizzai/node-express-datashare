@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+      integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+      crossorigin="anonymous"
+    />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="mx-auto">
+      <br />
+      <div class="container">
+        <h4>version <%= new_version %> of <%= data.data_name %></h4>
+        <button class="btn-add-input">append Row</button>
+        <form action="/data/add" method="post">
+
+          <input hidden name="dataName" value="<%= data.data_name %>" />
+          <div class="data-inputs">
+            <% contents.forEach((content, key) => { %>
+            <input
+              name="method"
+              type="text"
+              class="m-1"
+              value="<%= content.method  %>"
+            /><input name="value" type="text" value="<%= content.value  %>" />
+            <br />
+            <% }) %>
+          </div>
+
+          <br />
+
+          <button>Done</button>
+          <br />
+        </form>
+
+      </div>
+    </div>
+  </body>
+
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+    integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  ></script>
+
+  <script>
+    $(".btn-add-input").on("click", function () {
+      var template = `<input class="m-1" /><input/><br />`;
+      $(".data-inputs").append(template);
+      console.log("dd");
+    });
+  </script>
+</html>
