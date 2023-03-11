@@ -20,6 +20,22 @@ function getTest(callback) {
     )
 }
 
+function newHistoryOfData(version, parent_data, text, user_id, callback) {
+
+    var sql = `insert into history (version, parent_data , text, user_id_create) values ?; `
+    var values =
+        [
+            [version, parent_data, text, "1"]
+        ]
+
+    connection.query(sql, [values], (error, results) => {
+        if (error) throw error;
+        callback(results)
+    }
+
+    )
+}
+
 function getAllData(callback) {
     connection.query(
         'select * from data order by datetime_create desc ',
@@ -58,19 +74,20 @@ function getContentAndHistories(data_name, version, callback) {
     var sqls_histories = mysql.format(sql_histories, [data_name])
 
     var sql_content;
+    var sqls_contens;
 
     if (version == -1) {
         // the newest
-        var sql_content = `SELECT * , max(version) as max_version  from  contents where version = (SELECT max(version) from contents where parent_data = ? );`
-    } else {
-        var sql_content = `SELECT *  from contents where contents.parent_data = ? and version  = ?;`
-    }
+        sql_content = `SELECT * from contents where version = (SELECT max(version) from contents where parent_data = ? ) and parent_data = ? ;`
+        sqls_contens = mysql.format(sql_content, [data_name, data_name])
 
-    var sqls_contens = mysql.format(sql_content, [data_name, version])
+    } else {
+        sql_content = `SELECT *  from contents where contents.parent_data = ? and version  = ?;`
+        sqls_contens = mysql.format(sql_content, [data_name, version])
+    }
 
     var sql3 = `SELECT max(version) as max_version from history where parent_data = ? ;`
     var sql3s = mysql.format(sql3, [data_name])
-
 
     connection.query(
         sqls_histories + sqls_contens + sql3s, (error, results) => {
@@ -113,5 +130,7 @@ function createOneData(data_name, user_id, callback) {
 
 
 module.exports = {
-    getTest, getAllData, getOneData, createOneData, getContentAndHistories, getNewstVersion
+    getTest, getAllData, getOneData,
+    createOneData, getContentAndHistories,
+    getNewstVersion, newHistoryOfData
 }

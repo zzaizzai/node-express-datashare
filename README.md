@@ -14,6 +14,12 @@ $ npm i
 npm start
 ```
 
+with nodemon
+```
+nodemon app.js
+```
+
+http://localhost:8000/data/all
 
 https://port-0-node-express-datashare-r8xoo2mletykey5.sel3.cloudtype.app/
 

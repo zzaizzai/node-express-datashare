@@ -18,21 +18,43 @@
       <div class="container">
         <h4>version <%= new_version %> of <%= data.data_name %></h4>
         <button class="btn-add-input">append Row</button>
-        <form action="/data/add" method="post">
+        <form action="/data/add?version=<%= new_version %>" method="post">
           <input hidden name="dataName" value="<%= data.data_name %>" />
           <div class="data-inputs">
-            <input hidden name="method" class="m-1" /><input hidden name="value" /><br>
-            <input name="method" class="m-1" /><input  name="value" /><br>
+            <!-- inputs -->
+
+            <input hidden name="method" class="m-1" /><input
+              hidden
+              name="value"
+            /><br />
+            <!-- <input name="method" class="m-1" /><input  name="value" /><br> -->
             <% contents.forEach((content, key) => { %>
             <input
+              autocomplete="off"
               name="method"
               type="text"
               class="m-1"
               value="<%= content.method  %>"
-            /><input name="value" type="text" value="<%= content.value  %>" />
+            /><input
+              autocomplete="off"
+              name="value"
+              type="text"
+              value="<%= content.value  %>"
+            />
             <br />
             <% }) %>
+            <div class="m-1">new version label</div>
+            <input
+              type="text"
+              value="revise"
+              class="m-1"
+              autocomplete="off"
+              name="versionText"
+              placeholder="text"
+            />
           </div>
+
+          <br />
 
           <br />
 
@@ -52,7 +74,7 @@
 
   <script>
     $(".btn-add-input").on("click", function () {
-      var template = `<input name="method" class="m-1" /><input  name="value" /><br />`;
+      var template = `<input name="method"  autocomplete="off" class="m-1" /><input autocomplete="off" name="value" /><br />`;
       $(".data-inputs").append(template);
       console.log("dd");
     });

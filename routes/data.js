@@ -38,14 +38,51 @@ router.post('/add', (req, res) => {
     var methods = req.body.method
     var values = req.body.value
     var data_name = req.body.dataName
+    var vertsion_text = req.body.versionText
+    var data_version = req.query.version
+    let counts = 0;
 
     console.log(req.body)
+    console.log("creating " + data_name + " ver:" + data_version)
 
-    for (var i = 1; i < methods.length; i++ ) {
-        console.log("method:", methods[i],"values:", values[i])
+    var new_contents = []
+    for (var i = 1; i < methods.length; i++) {
+        if (methods[i] == "" || values[i] == "") {
+            continue
+        }
+        console.log(i, "method:", methods[i], "values:", values[i])
+        counts += 1
+        new_contents.push({ method: methods[i], value: values[i] })
+
     }
-    res.send("good")
-    // res.redirect('/data/add/' + data_name)
+    console.log("check" + counts)
+
+
+    db.getOneData(data_name, (result) => {
+
+        var data = result
+
+        db.getNewstVersion(data_name, (newest_version) => {
+            var new_version = newest_version + 1
+            db.getContentAndHistories(data_name, newest_version, (results) => {
+                var histories = results[0]
+                histories.unshift({version:data_version, text: vertsion_text})
+                // var contents = results[1]
+                res.render('data_check.ejs',
+                    {
+                        data: data,
+                        new_version: new_version,
+                        histories: histories,
+                        contents: new_contents,
+                        current_version: data_version,
+                    }
+                )
+            })
+        })
+
+    })
+
+
 
 })
 
@@ -62,14 +99,12 @@ router.get('/add/:id', function (req, res, next) {
                         data: data_data,
                         new_version: new_version,
                         histories: histories,
-                        contents: contents
+                        contents: contents,
                     }
                 )
             })
-
         })
     })
-
 });
 
 router.get('/check', function (req, res, next) {
@@ -88,10 +123,10 @@ router.get('/show/:id', function (req, res) {
         if (result_data) {
             db.getContentAndHistories(data_name, version_content, (results_history_and_content) => {
 
+
                 var histories = results_history_and_content[0];
                 var contents = results_history_and_content[1];
                 var version_sql = results_history_and_content[2][0]["max_version"];
-
 
                 if (version_content != -1) {
                     version_sql = version_content
