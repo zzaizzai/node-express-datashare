@@ -15,57 +15,78 @@
 
   <body>
     <div class="mx-auto">
-      <div class="container">
-        <h1>show detail <%= data.data_name %></h1>
-        <p>created at <%= data.datetime_create %></p>
-        <p>created by <%= data.user_name %></p>
-        <br />
-        <br />
-        <br />
+      <form action="/data/checkdone" method="post">
+        <div class="container">
+          <h1>show detail <%= data.data_name %></h1>
+          <input type="hidden" name="dataName" value="<%= data.data_name %>" />
+          <p>created at <%= data.datetime_create %></p>
+          <p>created by <%= data.user_name %></p>
+          <br />
+          <br />
+          <br />
 
-        <!-- show content -->
-        <h5>Contents</h5>
-        <table>
-          <tbody>
-            <% contents.forEach((content, key)=> { %>
-            <tr>
-              <td class="pr-2"><%= content.method %></td>
-              <td><%= content.value %></td>
-            </tr>
-            <% }) %>
-          </tbody>
-        </table>
+          <!-- show content -->
+          <h5>Contents</h5>
+          <table>
+            <tbody>
+              <% contents.forEach((content, key)=> { %>
+              <input
+                type="hidden"
+                name="method"
+                value="<%= content.method %>"
+              />
+              <input type="hidden" name="value" value="<%= content.value %>" />
+              <tr>
+                <td class="pr-2"><%= content.method %></td>
+                <td><%= content.value %></td>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table>
 
-        <br />
-        <br />
-        <br />
+          <br />
+          <br />
+          <br />
 
-        <!-- show histories -->
-        <h5>Histories</h5>
+          <!-- show histories -->
+          <h5>Histories</h5>
 
-        <table>
-          <tbody>
-            <% histories.forEach((history, key)=> { %>
-            <tr>
-              <% if (history.version == current_version) { %>
-              <td class="font-weight-bold pr-1"><%= history.version %>.</td>
-              <td class="font-weight-bold"><%= history.text %></td>
-              <% } else { %>
-              <td class="pr-1"><%= history.version %>.</td>
-              <td><%= history.text %></td>
-              <% } %>
-            </tr>
-            <% }) %>
-          </tbody>
-        </table>
+          <table>
+            <tbody>
+              <% histories.forEach((history, key)=> { %>
+              <tr>
+                <% if (history.version == current_version) { %>
+                <td class="font-weight-bold pr-1">
+                  <input
+                    name="version"
+                    type="hidden"
+                    value="<%= history.version %>"
+                  /><%= history.version %>.
+                </td>
+                <td class="font-weight-bold">
+                  <input
+                    type="hidden"
+                    name="versionText"
+                    value="<%= history.text %>"
+                  /><%= history.text %>
+                </td>
+                <% } else { %>
+                <td class="pr-1"><%= history.version %>.</td>
+                <td><%= history.text %></td>
+                <% } %>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table>
 
-        <br />
-        <br />
-        <br />
+          <br />
+          <br />
+          <br />
 
-        <!-- <button>Edit</button> -->
-        <div>Check Button</div>
-      </div>
+          <!-- <button>Edit</button> -->
+          <button class="btn btn-primary">Check Done</button>
+        </div>
+      </form>
     </div>
   </body>
 </html>

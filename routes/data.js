@@ -33,6 +33,22 @@ router.post('/create', function (req, res) {
     })
 })
 
+router.post('/checkdone', (req, res) => {
+
+    const data_name = req.body.dataName
+    const values = req.body.value
+    const methods = req.body.method
+    const version_new = req.body.version
+    const version_text = req.body.versionText
+
+    db.newHistoryOfData(version_new, data_name, version_text, 1, (result) => {
+        db.saveMethodsAndValues(data_name, version_new, methods, values, 1)
+        res.redirect('/data/show/' + data_name)
+    })
+
+
+})
+
 router.post('/add', (req, res) => {
     // ToDO: add new version data 
     var methods = req.body.method
@@ -42,7 +58,6 @@ router.post('/add', (req, res) => {
     var data_version = req.query.version
     let counts = 0;
 
-    console.log(req.body)
     console.log("creating " + data_name + " ver:" + data_version)
 
     var new_contents = []
@@ -66,7 +81,7 @@ router.post('/add', (req, res) => {
             var new_version = newest_version + 1
             db.getContentAndHistories(data_name, newest_version, (results) => {
                 var histories = results[0]
-                histories.unshift({version:data_version, text: vertsion_text})
+                histories.unshift({ version: data_version, text: vertsion_text })
                 // var contents = results[1]
                 res.render('data_check.ejs',
                     {

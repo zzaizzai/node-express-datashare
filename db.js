@@ -36,6 +36,24 @@ function newHistoryOfData(version, parent_data, text, user_id, callback) {
     )
 }
 
+function saveMethodsAndValues(parent_data, version_int, methods, values, user_id) {
+
+    console.log(methods)
+    const sql = `insert into contents ( parent_data , version, method, value,  user_id_create) values ?; `
+    const values_for_sql = []
+    for (var i = 0; i < methods.length; i++) {
+        values_for_sql.push([parent_data, version_int, methods[i], values[i], user_id])
+    }
+
+    console.log(values_for_sql)
+    connection.query(sql, [values_for_sql, (error, results)=> {
+        if (error) throw error;
+        console.log(results)
+    }])
+
+}
+
+
 function getAllData(callback) {
     connection.query(
         'select * from data order by datetime_create desc ',
@@ -132,5 +150,6 @@ function createOneData(data_name, user_id, callback) {
 module.exports = {
     getTest, getAllData, getOneData,
     createOneData, getContentAndHistories,
-    getNewstVersion, newHistoryOfData
+    getNewstVersion, newHistoryOfData,
+    saveMethodsAndValues
 }
