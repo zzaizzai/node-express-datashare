@@ -13,13 +13,14 @@
     <title>Document</title>
   </head>
   <%- include('navbar.ejs') %>
-
+  
   <body>
+
     <div class="mx-auto">
       <div class="container">
         <h1>show detail <%= data.data_name %></h1>
-        <p>created at <%= data.datetime_create %></p>
-        <p>created by <%= data.user_name %></p>
+        <p>created at <%= data_current.datetime %></p>
+        <p>created by id:<%= data_current.user_id_create %></p>
         <br />
         <br />
         <br />

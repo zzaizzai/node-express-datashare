@@ -8,6 +8,9 @@
 </head>
 <body>
 
+    <% if (messages) { %>
+        <div>Flash:<%= messages  %></div>
+    <% } %>
  
     <h1>main page</h1>
     <% for (var i = 0; i < test.length; i ++) { %>

@@ -17,7 +17,7 @@
     <div class="mx-auto">
       <form action="/data/checkdone" method="post">
         <div class="container">
-          <h1>show detail <%= data.data_name %></h1>
+          <h1>Draft of <%= data.data_name %></h1>
           <input type="hidden" name="dataName" value="<%= data.data_name %>" />
           <p>created at <%= data.datetime_create %></p>
           <p>created by <%= data.user_name %></p>

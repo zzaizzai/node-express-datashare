@@ -104,7 +104,7 @@ function getContentAndHistories(data_name, version, callback) {
         sqls_contens = mysql.format(sql_content, [data_name, version])
     }
 
-    var sql3 = `SELECT max(version) as max_version from history where parent_data = ? ;`
+    var sql3 = `SELECT  max(version) as max_version from history where parent_data = ? ;`
     var sql3s = mysql.format(sql3, [data_name])
 
     connection.query(

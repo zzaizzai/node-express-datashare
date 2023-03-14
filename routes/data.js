@@ -9,10 +9,14 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/all', function (req, res, next) {
+
+
     db.getAllData((results) => {
         res.render('data_all.ejs', { allData: results })
     })
 });
+
+
 
 router.get('/create', function (req, res, next) {
     res.render('data_create.ejs');
@@ -50,7 +54,7 @@ router.post('/checkdone', (req, res) => {
 })
 
 router.post('/add', (req, res) => {
-    // ToDO: add new version data 
+
     var methods = req.body.method
     var values = req.body.value
     var data_name = req.body.dataName
@@ -73,29 +77,37 @@ router.post('/add', (req, res) => {
     console.log("check" + counts)
 
 
-    db.getOneData(data_name, (result) => {
+    if (counts == 0) {
+        res.redirect('/data/add/' + data_name)
+    } else {
 
-        var data = result
 
-        db.getNewstVersion(data_name, (newest_version) => {
-            var new_version = newest_version + 1
-            db.getContentAndHistories(data_name, newest_version, (results) => {
-                var histories = results[0]
-                histories.unshift({ version: data_version, text: vertsion_text })
-                // var contents = results[1]
-                res.render('data_check.ejs',
-                    {
-                        data: data,
-                        new_version: new_version,
-                        histories: histories,
-                        contents: new_contents,
-                        current_version: data_version,
-                    }
-                )
+        db.getOneData(data_name, (result) => {
+
+            var data = result
+
+            db.getNewstVersion(data_name, (newest_version) => {
+                var new_version = newest_version + 1
+                db.getContentAndHistories(data_name, newest_version, (results) => {
+                    var histories = results[0]
+                    histories.unshift({ version: data_version, text: vertsion_text })
+                    // var contents = results[1]
+                    res.render('data_check.ejs',
+                        {
+                            data: data,
+                            new_version: new_version,
+                            histories: histories,
+                            contents: new_contents,
+                            current_version: data_version,
+                        }
+                    )
+                })
             })
+
         })
 
-    })
+    }
+
 
 
 
@@ -109,6 +121,7 @@ router.get('/add/:id', function (req, res, next) {
             db.getContentAndHistories(data_name, newest_version, (results) => {
                 var histories = results[0]
                 var contents = results[1]
+
                 res.render('data_new_version.ejs',
                     {
                         data: data_data,
@@ -127,8 +140,10 @@ router.get('/check', function (req, res, next) {
 });
 
 router.get('/show/:id', function (req, res) {
+
     var data_name = req.params.id;
     var version_content = req.query.ver
+
 
     if (!version_content) {
         version_content = -1
@@ -141,17 +156,30 @@ router.get('/show/:id', function (req, res) {
 
                 var histories = results_history_and_content[0];
                 var contents = results_history_and_content[1];
-                var version_sql = results_history_and_content[2][0]["max_version"];
+                var version_current = results_history_and_content[2][0]["max_version"];
 
                 if (version_content != -1) {
-                    version_sql = version_content
+                    version_current = version_content
+                }
+
+                var data_current;
+                for (let i = 0; i < histories.length; i++) {
+                    if (histories[i].version == version_current) {
+                        data_current = histories[i]
+                    }
+                }
+                // no certain version data
+                if (!data_current) {
+                    res.redirect('/data/show/' + data_name)
+                    return
                 }
 
                 res.render('data_detail.ejs', {
                     data: result_data,
                     histories: histories,
                     contents: contents,
-                    current_version: version_sql,
+                    current_version: version_current,
+                    data_current: data_current
                 })
             })
         } else {
