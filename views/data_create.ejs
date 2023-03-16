@@ -24,6 +24,10 @@
 
           <button>Done</button>
         </form>
+
+        <% for (let i = 0; i < message.length; i ++) { %>
+        <div class="alert alert-danger" role="alert"><%= message %></div>
+        <% } %>
       </div>
     </div>
   </body>

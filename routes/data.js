@@ -3,13 +3,11 @@ var router = express.Router();
 const db = require('./../db')
 
 
-/* GET users listing. */
 router.get('/', function (req, res, next) {
     res.send('data main page ');
 });
 
 router.get('/all', function (req, res, next) {
-
 
     db.getAllData((results) => {
         res.render('data_all.ejs', { allData: results })
@@ -19,14 +17,20 @@ router.get('/all', function (req, res, next) {
 
 
 router.get('/create', function (req, res, next) {
-    res.render('data_create.ejs');
+    res.render('data_create.ejs', { message: req.flash("message") });
 });
 
 router.post('/create', function (req, res) {
     var createName = req.body.createName
+
+    if (createName = "" | !createName) {
+        req.flash("message", "Enter some data name")
+        res.redirect('/data/create')
+        return
+    }
     db.getOneData(createName, (result) => {
         if (result) {
-            console.log("data exist")
+            req.flash("message", "Data already exists")
             res.redirect('/data/create')
         } else {
             db.createOneData(createName, 1, (result) => {
@@ -49,8 +53,6 @@ router.post('/checkdone', (req, res) => {
         db.saveMethodsAndValues(data_name, version_new, methods, values, 1)
         res.redirect('/data/show/' + data_name)
     })
-
-
 })
 
 router.post('/add', (req, res) => {
@@ -74,13 +76,11 @@ router.post('/add', (req, res) => {
         new_contents.push({ method: methods[i], value: values[i] })
 
     }
-    console.log("check" + counts)
-
 
     if (counts == 0) {
+        req.flash("message", "You need to add some data")
         res.redirect('/data/add/' + data_name)
     } else {
-
 
         db.getOneData(data_name, (result) => {
 
@@ -89,9 +89,10 @@ router.post('/add', (req, res) => {
             db.getNewstVersion(data_name, (newest_version) => {
                 var new_version = newest_version + 1
                 db.getContentAndHistories(data_name, newest_version, (results) => {
+
                     var histories = results[0]
                     histories.unshift({ version: data_version, text: vertsion_text })
-                    // var contents = results[1]
+
                     res.render('data_check.ejs',
                         {
                             data: data,
@@ -107,13 +108,10 @@ router.post('/add', (req, res) => {
         })
 
     }
-
-
-
-
 })
 
 router.get('/add/:id', function (req, res, next) {
+
     var data_name = req.params.id;
     db.getOneData(data_name, (data_data) => {
         db.getNewstVersion(data_name, (newest_version) => {
@@ -128,6 +126,7 @@ router.get('/add/:id', function (req, res, next) {
                         new_version: new_version,
                         histories: histories,
                         contents: contents,
+                        message: req.flash("message")
                     }
                 )
             })
@@ -141,6 +140,7 @@ router.get('/check', function (req, res, next) {
 
 router.get('/show/:id', function (req, res) {
 
+    console.log(req.flash("message"))
     var data_name = req.params.id;
     var version_content = req.query.ver
 

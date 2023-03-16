@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var flash = require('connect-flash');
 var session = require('express-session')
+var sessionStore = new session.MemoryStore;
 
 
 var indexRouter = require('./routes/index');
@@ -13,12 +14,14 @@ var dataRouter = require('./routes/data');
 
 var app = express();
 
-app.set('trust proxy', 1)
+// app.set('trust proxy', 1)
+
 app.use(session({
   secret: 'keyboard cat',
   resave: true,
+  store: sessionStore,
   saveUninitialized: true,
-  cookie: { secure: true }
+  cookie: { maxAge: 60000 },
 }))
 
 // view engine setup
@@ -34,8 +37,6 @@ app.use(flash());
 
 // app.use(function(req, res, next) {
 //   res.locals.message = req.flash()
-//   console.log(res.locals.message)
-//   console.log("flash")
 //   next()
 // })
 

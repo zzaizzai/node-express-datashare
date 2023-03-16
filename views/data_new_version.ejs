@@ -13,7 +13,6 @@
     <title>Document</title>
   </head>
   <body>
-
     <div class="mx-auto">
       <br />
       <div class="container">
@@ -29,6 +28,7 @@
               name="value"
             /><br />
             <!-- <input name="method" class="m-1" /><input  name="value" /><br> -->
+
             <% contents.forEach((content, key) => { %>
             <input
               autocomplete="off"
@@ -56,10 +56,14 @@
             placeholder="text"
           />
           <br />
-
+          <br />
+          <button>Done</button>
+          <br />
           <br />
 
-          <button>Done</button>
+          <% for (let i = 0; i < message.length; i ++) { %>
+          <div class="alert alert-primary" role="alert"><%= message %></div>
+          <% } %>
           <br />
         </form>
       </div>
