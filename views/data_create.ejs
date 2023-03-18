@@ -14,15 +14,19 @@
   </head>
 
   <body>
+
+  <%- include('navbar.ejs') %>
+
+  
     <div class="mx-auto">
       <div class="container">
         <form action="/data/create" method="post">
           <br />
+          <h5>Create New Data</h5>
 
-          <input name="createName" type="text" />
+          <input placeholder="data name" name="createName" type="text" />
+          <button>Create</button>
           <br />
-
-          <button>Done</button>
         </form>
 
         <% for (let i = 0; i < message.length; i ++) { %>

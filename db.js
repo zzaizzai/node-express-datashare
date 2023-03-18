@@ -46,7 +46,7 @@ function saveMethodsAndValues(parent_data, version_int, methods, values, user_id
     }
 
     console.log(values_for_sql)
-    connection.query(sql, [values_for_sql, (error, results)=> {
+    connection.query(sql, [values_for_sql, (error, results) => {
         if (error) throw error;
         console.log(results)
     }])
@@ -61,6 +61,17 @@ function getAllData(callback) {
             if (error) throw error;
             callback(results)
         }
+    )
+}
+
+function getResearchData(search_text, callback) {
+    const sql = `select * from data  where name like ? order by datetime_create desc`
+    const sqls = mysql.format(sql, ["%" + search_text + "%"])
+    
+    connection.query(sqls, (error, results) => {
+        if (error) throw error;
+        callback(results)
+    }
     )
 }
 
@@ -151,5 +162,5 @@ module.exports = {
     getTest, getAllData, getOneData,
     createOneData, getContentAndHistories,
     getNewstVersion, newHistoryOfData,
-    saveMethodsAndValues
+    saveMethodsAndValues, getResearchData
 }

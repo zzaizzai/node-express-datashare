@@ -19,10 +19,8 @@
     <div class="mx-auto">
       <div class="container">
         <h1>show detail <%= data.data_name %></h1>
-        <p>created at <%= data_current.datetime %></p>
-        <p>created by id:<%= data_current.user_id_create %></p>
-        <br />
-        <br />
+        <div>created at: <%= data_current.datetime %></div>
+        <div>created by id:<%= data_current.user_id_create %></div>
         <br />
 
         <!-- show content -->
@@ -39,13 +37,12 @@
         </table>
 
         <br />
-        <br />
-        <br />
+
 
         <!-- show histories -->
         <h5>Histories</h5>
 
-        <table>
+        <table class="">
           <tbody>
             <% histories.forEach((history, key)=> { %>
             <tr>
@@ -68,7 +65,7 @@
         <div>Current Version: <%= current_version %></div>
 
         <!-- <button>Edit</button> -->
-        <a href="/data/add/<%= data.data_name %>">New Version</a>
+        <button onclick="location.href='/data/add/<%= data.data_name %>'">New Version</button>
       </div>
     </div>
   </body>

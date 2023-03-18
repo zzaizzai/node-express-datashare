@@ -16,16 +16,30 @@
   <%- include('navbar.ejs') %>
 
   <body>
-
     <div class="mx-auto">
       <div class="container">
         <h3>show all data</h3>
+        <form action="/data/all" method="get">
+          <% if (locals.search) { %>
+          <input
+            type="search"
+            name="search"
+            placeholder="Search"
+            value="<%= search %>"
+          />
+          <% } else { %>
+          <input type="search" name="search" placeholder="Search" />
+
+          <% } %>
+          <button>Search</button>
+        </form>
+        <br />
+        <button onclick="location.href='/data/create'">Create New Data</button>
         <% allData.forEach((value, key)=> { %>
         <div>
           <a href="/data/show/<%= value.name %>"> <%= value.name %> </a>
         </div>
         <% }) %>
-        <a class="btn btn-outline-primary" href="/data/create">Create</a>
       </div>
     </div>
   </body>

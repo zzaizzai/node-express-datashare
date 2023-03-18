@@ -7,11 +7,26 @@ router.get('/', function (req, res, next) {
     res.send('data main page ');
 });
 
-router.get('/all', function (req, res, next) {
+router.get('/all', function (req, res) {
 
-    db.getAllData((results) => {
-        res.render('data_all.ejs', { allData: results })
-    })
+    const search = req.query.search
+    if (search == "" || !search) {
+        db.getAllData((results) => {
+            res.render('data_all.ejs', {
+                allData: results,
+            })
+        })
+    } else {
+
+        console.log("no search")
+        db.getResearchData(search, (results) => {
+            res.render('data_all.ejs', { allData: results, search: search })
+        })
+
+
+    }
+
+
 });
 
 
