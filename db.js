@@ -100,27 +100,29 @@ function getNewstVersion(data_name, callback) {
 
 function getContentAndHistories(data_name, version, callback) {
 
-    var sql_histories = `select * from history where history.parent_data = ? order by version desc;`
-    var sqls_histories = mysql.format(sql_histories, [data_name])
+    let sql_histories = `select *, users.name as user_name from history 
+    left join users on history.user_id_create = users.id 
+    where history.parent_data = ? 
+    order by history.version  DESC ;`
+    sql_histories = mysql.format(sql_histories, [data_name])
 
-    var sql_content;
-    var sqls_contens;
+    let sql_content;
 
     if (version == -1) {
         // the newest
         sql_content = `SELECT * from contents where version = (SELECT max(version) from contents where parent_data = ? ) and parent_data = ? ;`
-        sqls_contens = mysql.format(sql_content, [data_name, data_name])
+        sql_content = mysql.format(sql_content, [data_name, data_name])
 
     } else {
         sql_content = `SELECT *  from contents where contents.parent_data = ? and version  = ?;`
-        sqls_contens = mysql.format(sql_content, [data_name, version])
+        sql_content = mysql.format(sql_content, [data_name, version])
     }
 
     var sql3 = `SELECT  max(version) as max_version from history where parent_data = ? ;`
     var sql3s = mysql.format(sql3, [data_name])
 
     connection.query(
-        sqls_histories + sqls_contens + sql3s, (error, results) => {
+        sql_histories + sql_content + sql3s, (error, results) => {
             if (error) throw error;
             callback(results)
         }

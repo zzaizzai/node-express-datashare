@@ -174,7 +174,8 @@ router.get('/show/:id', function (req, res) {
                     version_current = version_content
                 }
 
-                var data_current;
+                let data_current;
+
                 for (let i = 0; i < histories.length; i++) {
                     if (histories[i].version == version_current) {
                         data_current = histories[i]

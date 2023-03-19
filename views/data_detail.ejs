@@ -13,14 +13,13 @@
     <title>DataSharing</title>
   </head>
   <%- include('navbar.ejs') %>
-  
-  <body>
 
+  <body>
     <div class="mx-auto">
       <div class="container">
         <h1>show detail <%= data.data_name %></h1>
         <div>created at: <%= data_current.datetime %></div>
-        <div>created by id:<%= data_current.user_id_create %></div>
+        <div>created by id:<%= data_current.user_name %></div>
         <br />
 
         <!-- show content -->
@@ -37,7 +36,6 @@
         </table>
 
         <br />
-
 
         <!-- show histories -->
         <h5>Histories</h5>
@@ -65,7 +63,9 @@
         <div>Current Version: <%= current_version %></div>
 
         <!-- <button>Edit</button> -->
-        <button onclick="location.href='/data/add/<%= data.data_name %>'">New Version</button>
+        <button onclick="location.href='/data/add/<%= data.data_name %>'">
+          New Version
+        </button>
       </div>
     </div>
   </body>
