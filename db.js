@@ -67,7 +67,7 @@ function getAllData(callback) {
 function getResearchData(search_text, callback) {
     const sql = `select * from data  where name like ? order by datetime_create desc`
     const sqls = mysql.format(sql, ["%" + search_text + "%"])
-    
+
     connection.query(sqls, (error, results) => {
         if (error) throw error;
         callback(results)
@@ -76,15 +76,16 @@ function getResearchData(search_text, callback) {
 }
 
 function getOneData(name, callback) {
-    connection.query(
-        `select *, data.name as data_name, users.name  as user_name 
-        from data inner join users on data.user_id_create = users.id 
-        where data.name  = ?`, [name],
-        (error, results) => {
-            if (error) throw error;
-            callback(results[0])
-        }
-    )
+
+    const sql = `select *, data.name as data_name, users.name  as user_name 
+    from data inner join users on data.user_id_create = users.id 
+    where data.name  = ?`
+    const sqls = mysql.format(sql, [name])
+
+    connection.query(sqls, (error, results) => {
+        if (error) throw error;
+        callback(results[0])
+    })
 }
 
 function getNewstVersion(data_name, callback) {

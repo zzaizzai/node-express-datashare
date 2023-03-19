@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 const db = require('./../db')
 
-
 router.get('/', function (req, res, next) {
     res.send('data main page ');
 });
@@ -22,11 +21,7 @@ router.get('/all', function (req, res) {
         db.getResearchData(search, (results) => {
             res.render('data_all.ejs', { allData: results, search: search })
         })
-
-
     }
-
-
 });
 
 
@@ -36,24 +31,29 @@ router.get('/create', function (req, res, next) {
 });
 
 router.post('/create', function (req, res) {
-    var createName = req.body.createName
+    const createName = req.body.createName
 
-    if (createName = "" | !createName) {
+    if (createName == "" | !createName) {
         req.flash("message", "Enter some data name")
         res.redirect('/data/create')
         return
+    } else {
+        db.getOneData(createName, (result) => {
+
+            if (result) {
+                req.flash("message", "Data already exists")
+                res.redirect('/data/create')
+                return
+
+            } else {
+                db.createOneData(createName, 1, (result) => {
+                    console.log("created" + createName)
+                    res.redirect('/data/all')
+                    return
+                })
+            }
+        })
     }
-    db.getOneData(createName, (result) => {
-        if (result) {
-            req.flash("message", "Data already exists")
-            res.redirect('/data/create')
-        } else {
-            db.createOneData(createName, 1, (result) => {
-                console.log("created" + createName)
-                res.redirect('/data/all')
-            })
-        }
-    })
 })
 
 router.post('/checkdone', (req, res) => {
@@ -72,7 +72,7 @@ router.post('/checkdone', (req, res) => {
 
 router.post('/add', (req, res) => {
 
-    var methods = req.body.method
+    const methods = req.body.method
     var values = req.body.value
     var data_name = req.body.dataName
     var vertsion_text = req.body.versionText
@@ -119,9 +119,7 @@ router.post('/add', (req, res) => {
                     )
                 })
             })
-
         })
-
     }
 })
 
@@ -158,7 +156,6 @@ router.get('/show/:id', function (req, res) {
     console.log(req.flash("message"))
     var data_name = req.params.id;
     var version_content = req.query.ver
-
 
     if (!version_content) {
         version_content = -1
