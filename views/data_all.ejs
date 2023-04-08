@@ -19,6 +19,8 @@
     <div class="mx-auto">
       <div class="container">
         <h3>show all data</h3>
+
+        <!-- Search input -->
         <form action="/data/all" method="get">
           <% if (locals.search) { %>
           <input
@@ -33,8 +35,13 @@
           <% } %>
           <button>Search</button>
         </form>
+
         <br />
         <button onclick="location.href='/data/create'">Create New Data</button>
+        <br />
+        <br />
+
+        <!-- Data list -->
         <% allData.forEach((value, key)=> { %>
         <div>
           <a href="/data/show/<%= value.name %>"> <%= value.name %> </a>

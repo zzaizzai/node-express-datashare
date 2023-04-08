@@ -47,9 +47,17 @@
               <% if (history.version == current_version) { %>
               <td class="font-weight-bold pr-1"><%= history.version %>.</td>
               <td class="font-weight-bold"><%= history.text %></td>
+              <td class="pl-2"></td>
               <% } else { %>
               <td class="pr-1"><%= history.version %>.</td>
               <td><%= history.text %></td>
+              <td class="pl-2">
+                <a
+                  class="btn-sm btn-outline-primary"
+                  href="/data/show/<%= data.data_name %>?ver=<%= history.version %>"
+                  >Go</a
+                >
+              </td>
               <% } %>
             </tr>
             <% }) %>
