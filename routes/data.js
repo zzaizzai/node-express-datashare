@@ -25,6 +25,18 @@ router.get('/all', function (req, res) {
 });
 
 
+router.get('/compare', function (req, res) {
+    res.render('data_compare.ejs', {})
+})
+
+router.post('/compare/getsearchresult', function (req, res) {
+    const searchwords = req.body.searchwords
+    db.getResearchData(searchwords, (results) => {
+        var json_results = JSON.parse(JSON.stringify(results))
+        res.status(200).json(json_results)
+    })
+
+})
 
 router.get('/create', function (req, res, next) {
     res.render('data_create.ejs', { message: req.flash("message") });

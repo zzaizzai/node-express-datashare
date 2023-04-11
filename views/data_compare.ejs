@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+      integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+      crossorigin="anonymous"
+    />
+    <title>DataSharing</title>
+  </head>
+
+  <%- include('navbar.ejs') %>
+
+  <body>
+    <div class="mx-auto">
+      <div class="container">
+        <h3>Compare all data</h3>
+
+        <!-- Search input -->
+        <form action="/data/all" method="get">
+          <% if (locals.search) { %>
+          <input
+            type="search"
+            name="search"
+            placeholder="Search"
+            value="<%= search %>"
+          />
+          <% } else { %>
+          <input
+            id="searchword"
+            type="search"
+            name="search"
+            placeholder="Search"
+          />
+
+          <% } %>
+          <button>Search</button>
+        </form>
+        <br />
+        <!-- <button onclick="location.href='/data/create'">Create New Data</button> -->
+        <br />
+        <br />
+        <div id="results"></div>
+        <!-- Data list -->
+      </div>
+    </div>
+  </body>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+    integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  ></script>
+  <script>
+    function searchajax() {
+      $("#searchword").keyup(function () {
+        var words = $("#searchword").val();
+
+        // console.log(words)
+
+        if (words != "") {
+          $.ajax({
+            type: "POST",
+            url: "/data/compare/getsearchresult",
+            data: { searchwords: words },
+            dataType: "json",
+            success: function (result) {
+              console.log(result);
+              if (result.length > 0) {
+                var str = "";
+                for (var i = 0; i < result.length; i++) {
+                  str += `<span><input type='checkbox'> ${result[i].name}</span><br/>`;
+                }
+                $("#results").html(str);
+              } else {
+                $("#results").html("");
+              }
+            },
+            error: function (e) {
+              console.log("error:" + e.status);
+            },
+          });
+        } else {
+          $("#results").html("");
+        }
+      });
+    }
+
+    searchajax();
+  </script>
+</html>
